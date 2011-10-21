@@ -36,6 +36,8 @@
 				itemWidth = $items.first().width(),		// 아이템 하나의 너비를 구함
 				$prevBtn = $(options.prevBtn),
 				$nextBtn = $(options.nextBtn);
+				
+			slider.css('overflow', 'hidden');	// 필수 css 속성, css쪽에서 정의안하는 경우를 대비해 설정
 			
 			$container.prepend($beforeItems).append($afterItems);	// 기존 아이템들의 앞에는 beforeItems를 추가하고 뒤에는 afterItems를 추가함
 																	// 즉, 원래 아이템 목록이 '1-가','2-나','3-다','4-라','5-마' 이고 visible이 3이라면 아래와 같이됨

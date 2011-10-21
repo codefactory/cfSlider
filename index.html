@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>sliding layout</title>
 	<style>
-		* {
+		div, ul, li {
 			margin: 0;
 			padding: 0;
 		}
@@ -13,9 +13,6 @@
 			margin: 50px auto;
 			width: 468px;
 			height: 720px;
-			background: white;
-			text-align: center;
-			overflow: hidden;
 		}
 		
 		#slider ul {
@@ -29,15 +26,20 @@
 			float: left;
 		}
 		
-		#control {
-			margin: 0 auto;
-			width: 468px;
-			text-align: center;
+		button {
+			position: absolute;
+			top: 400px;
+			padding: 10px;
 		}
 		
-		#control button {
-			padding: 10px;
-			margin: 0 15px;
+		button.prev {
+			left: 50%;
+			margin-left: -300px;
+		}
+		
+		button.next {
+			right: 50%;
+			margin-right: -300px;
 		}
 	</style>
 </head>
@@ -46,19 +48,17 @@
 	<div id="slider">
 		
 		<ul class="container">
+			<li class="item"><img src="yuri5.jpg"></li>
 			<li class="item"><img src="yuri1.jpg"></li>
 			<li class="item"><img src="yuri2.jpg"></li>
 			<li class="item"><img src="yuri3.jpg"></li>
 			<li class="item"><img src="yuri4.jpg"></li>
-			<li class="item"><img src="yuri5.jpg"></li>
 		</ul>
 		
 	</div>
 	
-	<div id="control">
-		<button type="button" class="prev">이전</button>
-		<button type="button" class="next">다음</button>
-	</div>
+	<button type="button" class="prev">이전</button>
+	<button type="button" class="next">다음</button>
 	
 	<script src="jquery-1.6.4.min.js"></script>
 	<script src="jquery.cfSlider.js"></script>
