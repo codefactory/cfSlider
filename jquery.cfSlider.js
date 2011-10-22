@@ -1,3 +1,9 @@
+/*
+ * 안녕하세요 코드팩토리입니다. http://codefactory.kr, master@codefactory.kr
+ * 이 프로그램은 아무런 제약없이 복사/수정/재배포 하셔도 되며 이 주석을 지우셔도 됩니다.
+ * 감사합니다.
+ */
+
 // cfSlider의 작동 방식은
 // 아이템들을 감싸고 있는 container의 margin-left 값을 조절해서
 // margin-left를 작게하면 아이템들이 왼쪽으로 움직이고, margin-left를 크게하면 아이템들이 오른쪽으로 움직이는 원리를 사용합니다.
