@@ -19,7 +19,8 @@ slider > container > item 형태의 중첩구조이면 됩니다.
 
 
 CSS 스타일은 아래와 같이 합니다. 아래 예시의 경우는 화면에 하나의 item만 보여줄 경우이며
-가로슬라이드이면서 두 개의 item을 보여준다면, #slider의 width를 400px로 하면 됩니다.
+가로 슬라이드이면서 화면에 두 개의 item을 보여준다면, #slider의 width를 400px로 하면 됩니다.
+.item의 width와 height는 슬라이드할 item 하나의 width와 height로 설정합니다.
 
 <style>
 	#slider {
@@ -30,18 +31,18 @@ CSS 스타일은 아래와 같이 합니다. 아래 예시의 경우는 화면�
 	
 	#slider .container {
 		list-style: none;
-		height: 100%;
 	}
 	
 	#slider .item {
 		width: 200px;
-		height: 100%;
+		height: 70px;
 		float: left;
 	}
 </style>
 
 
-cfSlder의 사용은 아래와 같이 합니다.
+cfSlder의 사용은 아래와 같이 합니다. 옵션으로 화면에 보여질 item의 수(display, 기본값 1),
+한 번에 슬라이드될 아이템의 수(move, 기본값 1), 속도(speed, 기본값 400) 등을 설정할 수 있습니다.
 
 <script>
 	$('#slider').cfSlider();
@@ -57,7 +58,8 @@ cfSlider의 적용가능 옵션은 아래와 같습니다.
 $('#slider').cfSlider({
 	container: '.container',// 아이템들을 가지고 있는 엘리먼트의 jQuery 셀렉터
 	item: '.item',		// 아이템 엘리먼트의 jQuery 셀렉터
-	display: 1,		// 한 화면에 보여질 아이템의 수
+	display: 1,		// 화면에 보여지는 아이템의 수
+	move: 1,					// 한 번에 슬라이드될(이동할) 아이템의 수
 	direction: 'horizontal',// 가로슬라이드: horizontal, 세로슬라이드: vertical
 	speed: 400,		// 슬라이딩 속도, 밀리세컨드 단위의 숫자 또는 jQuery.animate()에 사용가능한 'slow', 'fast' 등
 	prevBtn: '.prev',	// 이전 버튼의 jQuery 셀렉터(꼭 버튼 형태일 필요 없음)

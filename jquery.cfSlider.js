@@ -20,7 +20,8 @@
 		var defaults = {
 			container: '.container',	// 아이템들을 가지고 있는 엘리먼트의 jQuery 셀렉터
 			item: '.item',				// 아이템 엘리먼트의 jQuery 셀렉터
-			display: 1,					// 한 화면에 보여질 아이템의 수
+			display: 1,					// 화면에 보여지는 아이템의 수
+			move: 1,					// 한 번에 슬라이드될(이동할) 아이템의 수
 			direction: 'horizontal',	// 가로슬라이드: horizontal, 세로슬라이드: vertical
 			speed: 400,					// 슬라이딩 속도, 밀리세컨드 단위의 숫자 또는 jQuery.animate()에 사용가능한 'slow', 'fast' 등 문자열
 			prevBtn: '.prev',			// 이전 버튼의 jQuery 셀렉터(꼭 버튼 형태일 필요 없음)
@@ -38,8 +39,8 @@
 				$container = slider.find(options.container),
 				$items = $container.find(options.item),
 				itemLength = $items.length,
-				$afterItems = $items.slice(0, options.display).clone(),		// 아이템들 중에서 앞에서 부터 display 수 만큼 복사
-				$beforeItems = $items.slice(itemLength - options.display, itemLength).clone(),	// 아이템들 중에서 뒤에서 부터 display 수 만큼 복사
+				$afterItems = $items.slice(0, options.display).clone(),		// 아이템들 중에서 앞에서 부터 options.display 만큼 복사
+				$beforeItems = $items.slice(itemLength - options.display, itemLength).clone(),	// 아이템들 중에서 뒤에서 부터 options.display 만큼 복사
 				itemSize = options.direction === 'horizontal' ? $items.first().width() : $items.first().height(),		// 아이템 하나의 너비 또는 높이를 구함
 				marginType = options.direction === 'horizontal' ? 'marginLeft' : 'marginTop',	// 슬라이딩 효과에 사용할 margin의 종류
 				$prevBtn = $(options.prevBtn),
@@ -48,14 +49,14 @@
 			slider.css('overflow', 'hidden');	// 필수 css 속성, css쪽에서 정의안하는 경우를 대비해 설정, 실제 움직이는 $container를 싸고 있는 slider가 overflow:hidden 속성을 가지고 있어야 자신의 크기만큼만 사용자에게 보여줄수 있기 때문
 			
 			$container.prepend($beforeItems).append($afterItems);	// 기존 아이템들의 앞에는 beforeItems를 추가하고 뒤에는 afterItems를 추가함
-																	// 즉, 원래 아이템 목록이 '1-가','2-나','3-다','4-라','5-마' 이고 display이 3이라면 아래와 같이됨
+																	// 즉, 원래 아이템 목록이 '1-가','2-나','3-다','4-라','5-마' 이고 move가 3이라면 아래와 같이됨
 																	// ==> '1-다','2-라','3-마','4-가','5-나','6-다','7-라','8-마','9-가','10-나','11-다'
 																	// 좌우 이동을 위해서 원래 html코드에 있던 아이템 목록의 앞뒤에 복사(clone)한 아이템들을 더 붙여 주는 것
 			
 			
 			// 그리고 나서 $container의 width를 새로 복사해넣은 아이템들까지 포함한 width로 만들어주고
 			// 원래 html코드에 있던 첫 번째 아이템이 보이게 하기위해 $container의 marginLeft 값을 조정함
-			// 예) itemLength = 5, itemSize = 100, display = 3 인 상황이었다면
+			// 예) itemLength = 5, itemSize = 100, move = 3 인 상황이었다면
 			// 		$container의 width는 앞에 3개, 원래 5개, 뒤에 3개 이렇게 11개의 아이템이라 1100이 되고
 			//		원래 5개 중 첫 번째가 제일 처음에 보이게 하기위해 앞에 3개 width 만큼을 -marginLeft 처리함
 			// * 위 설명은 direction이 horizontal일 경우에 해당합니다. vertical일 경우에는 $container의 width는 itemSize이고 marginLeft대신 marginTop을 사용합니다.
@@ -68,49 +69,48 @@
 			
 			// 이전 버튼에 이벤트 발생시 실행
 			$prevBtn.bind(options.eventType, function() {
-				
-				if ($container.is(':not(:animated)')) {			// 애니메이션 진행중일 때 누르면 반응 없도록 처리
-					var obj = {};
-					obj[marginType] = parseInt($container.css(marginType)) + itemSize;		// $container의 현재의 marginType에 해당하는 값을 가져오고 이전으로 이동할 때에는 marginType 값을 현재보다 아이템 하나의 크기만큼 더해줍니다.
-					
-					$container.animate(obj, options.speed, function() {
-						if (parseInt($container.css(marginType)) == -(itemSize * (options.display - 1))) {
-							$container.css(marginType, -(itemSize * (itemLength + options.display - 1)));
-						}
-					});
-					// 애니메이션의 콜백함수는 다음과 같은 기능을 합니다.
-					// container의 marginLeft 값이 계속 커져서 원래 아이템에서 복사한 아이템이 보이게된 후 ('4-가'에서 '3-마'로 바뀐 직후)
-					// marginLeft 값을 itemLength * itemSize 만큼 빼줘서 현재 화면에 보인 '마'가 '3-마'가 아니라 '8-마'가 되게 해줍니다.
-					// 이렇게 처리하지 않고 이전 버튼을 계속 클릭하면 marginLeft값이 계속 커져서 아이템이 안보이게 되겠지만
-					// 이렇게 처리를 하면 marginLeft 값이 작아지게 되므로 다시 이전 버튼을 클릭해서 marginLeft를 더해도 슬라이딩이 가능하게 됩니다.
-					// marginLeft의 변화가 매우 빨리(즉시) 일어나고, 화면에는 계속 '마'가 보이기 때문에 사용자는 marginLeft의 변화를 인지하지 못합니다.
-					// * 위 설명은 direction이 horizontal일 경우에 해당합니다. vertical일 경우에는 marginLeft대신 marginTop을 사용합니다.
-				}
-				
+				go('prev');
 			});
 		
 			// 다음 버튼에 이벤트 발생시 실행
 			$nextBtn.bind(options.eventType, function() {
+				go('next');
+			});
+			
+			// 슬라이드 함수
+			function go(direction) {
 				
-				if ($container.is(':not(:animated)')) {			// 애니메이션 진행중일 때 누르면 반응 없도록 처리
-					var obj = {};
-					obj[marginType] = parseInt($container.css(marginType)) - itemSize;		// $container의 현재의 marginType에 해당하는 값을 가져오고 이전으로 이동할 때에는 marginType 값을 현재보다 아이템 하나의 크기만큼 빼줍니다.
-					
-					$container.animate(obj, options.speed, function() {
-						if (parseInt($container.css(marginType)) == -(itemSize * (itemLength + options.display))) {
-							$container.css(marginType, -(itemSize * options.display));
-						}
-					});
-					// 애니메이션의 콜백함수는 다음과 같은 기능을 합니다.
-					// container의 marginLeft 값이 계속 작아져서 원래 아이템에서 복사한 아이템이 보이게된 후 ('8-마'에서 '9-가'로 바뀐 직후)
-					// marginLeft 값을 itemLength * itemSize 만큼 더해줘서 현재 화면에 보인 '가'가 '9-가'가 아니라 '4-가'가 되게 해줍니다.
-					// 이렇게 처리하지 않고 다음 버튼을 계속 클릭하면 marginLeft값이 계속 작아져서 아이템이 안보이게 되겠지만
-					// 이렇게 처리를 하면 marginLeft 값이 커지게 되므로 다시 다음 버튼을 클릭해서 marginLeft를 빼도 슬라이딩이 가능하게 됩니다.
-					// marginLeft의 변화가 매우 빨리(즉시) 일어나고, 화면에는 계속 '가'가 보이기 때문에 사용자는 marginLeft의 변화를 인지하지 못합니다.
-					// * 위 설명은 direction이 horizontal일 경우에 해당합니다. vertical일 경우에는 marginLeft대신 marginTop을 사용합니다.
+				if ($container.is(':animated')) {		// 애니메이션 진행중일 때 누르면 반응 없도록 처리
+					return;
 				}
 				
-			});
+				var obj = {},	// animate에 넘길 parameter를 만들기 위한 임시 객체
+					currentMargin = parseInt($container.css(marginType));	// $container의 현재 margin
+				
+				if (direction === 'prev') {
+					
+					var targetMargin = currentMargin + itemSize * options.move;		// 이동할 margin
+						
+					if ((Math.abs(currentMargin) / itemSize) < options.move) {	// 이전 위치에 아이템이 move할 아이템보다 적게 남아있을 경우
+						$container.css(marginType, currentMargin - (itemSize * itemLength));	// itemSize * itemLength 만큼 margin을 조정 -> 이렇게 하기 위해 아이템들을 clone()해서 원본의 앞뒤에 붙여놨던 것 -> 순간적으로 margin이 조정되고 보이는 아이템 항목은 같기 때문에 사용자는 인지하지 못함
+						targetMargin = targetMargin - (itemSize * itemLength);	// 이동할 margin 재설정
+					}
+					
+				} else if (direction === 'next') {
+					
+					var targetMargin = currentMargin - itemSize * options.move;		// 이동할 margin
+						
+					if (itemLength + options.display * 2 - (Math.abs(currentMargin) / itemSize + options.display) < options.move) {	// 다음 위치에 아이템이 move할 아이템보다 적게 남아있을 경우
+						$container.css(marginType, currentMargin + (itemSize * itemLength));	// itemSize * itemLength 만큼 margin을 조정 -> 이렇게 하기 위해 아이템들을 clone()해서 원본의 앞뒤에 붙여놨던 것 -> 순간적으로 margin이 조정되고 보이는 아이템 항목은 같기 때문에 사용자는 인지하지 못함
+						targetMargin = targetMargin + (itemSize * itemLength);	// 이동할 margin 재설정
+					}
+					
+				}
+				
+				obj[marginType] = targetMargin;
+				$container.animate(obj, options.speed);		// 슬라이드 실행
+				
+			}
 			
 		});
 		
