@@ -1,1 +1,67 @@
-jQuery를 사용한 슬라이딩 레이아웃입니다.
+jQuery를 사용한 슬라이더 만들기 plugin 입니다.
+
+---------------------------------------
+ * 사용방법
+---------------------------------------
+다음과 같은 형태의 HTML 마크업이 필요합니다. 꼭, ul,li가 사용될 필요는 없으며
+slider > container > item 형태의 중첩구조이면 됩니다.
+
+<div id="slider">
+	<ul class="container">
+		<li class="item"></li>
+		<li class="item"></li>
+		<li class="item"></li>
+		<li class="item"></li>
+		<li class="item"></li>
+	</ul>
+</div>
+
+
+CSS 스타일은 아래와 같이 합니다. 아래 예시의 경우는 화면에 하나의 item만 보여줄 경우이며
+가로슬라이드이면서 두 개의 item을 보여준다면, #slider의 width를 400px로 하면 됩니다.
+
+<style>
+	#slider {
+		width: 200px;
+		height: 70px;
+		overflow: hidden;
+	}
+	
+	#slider .container {
+		list-style: none;
+		height: 100%;
+	}
+	
+	#slider .item {
+		width: 200px;
+		height: 100%;
+		float: left;
+	}
+</style>
+
+
+cfSlder의 사용은 아래와 같이 합니다.
+<script>
+	$('#slider').cfSlider();
+</script>
+
+
+---------------------------------------
+ * 옵션들
+---------------------------------------
+cfSlider의 적용가능 옵션은 아래와 같습니다.
+
+<script>
+	$('#slider').cfSlider({
+		container: '.container',	// 아이템들을 가지고 있는 엘리먼트의 jQuery 셀렉터
+		item: '.item',				// 아이템 엘리먼트의 jQuery 셀렉터
+		display: 1,					// 한 화면에 보여질 아이템의 수
+		direction: 'horizontal',	// 가로슬라이드: horizontal, 세로슬라이드: vertical
+		speed: 400,					// 슬라이딩 속도, 밀리세컨드 단위의 숫자 또는 jQuery.animate()에 사용가능한 'slow', 'fast' 등 문자열
+		prevBtn: '.prev',			// 이전 버튼의 jQuery 셀렉터(꼭 버튼 형태일 필요 없음)
+		nextBtn: '.next',			// 다음 버튼의 jQuery 셀렉터(꼭 버튼 형태일 필요 없음)
+		eventType: 'click'			// slider를 작동시킬 때 필요한 이벤트. 즉, 이전/다음 버튼에 이 이벤트가 발생하면 slider 작동
+									// 활용예) 모바일웹 개발할 때 터치(플리킹)으로 slider를 작동시키고 싶으면 이 자리에 click 대신 적절한
+									// 커스텀 이벤트 타입을 등록하고, 터치를 할 때 그 커스텀 이벤트를 prevBtn, nextBtn에 발생시키면 됨
+	});
+</script>
