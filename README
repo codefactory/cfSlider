@@ -20,7 +20,8 @@ slider > container > item 형태의 중첩구조이면 됩니다.
 
 
 CSS 스타일은 아래와 같이 합니다. 아래 예시의 경우는 화면에 하나의 item만 보여줄 경우이며
-가로 슬라이드이면서 화면에 두 개의 item을 보여준다면, #slider의 width를 400px로 하면 됩니다.
+가로 슬라이드이면서 화면에 두 개의 item을 보여준다면, cfSlider를 생성할 때 display를 2로
+설정하고 #slider의 width를 400px로 하면 됩니다.
 .item의 width와 height는 슬라이드할 item 하나의 width와 height로 설정합니다.
 
 <style>
