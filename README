@@ -59,7 +59,7 @@ $('#slider').cfSlider({
 	container: '.container',// 아이템들을 가지고 있는 엘리먼트의 jQuery 셀렉터
 	item: '.item',		// 아이템 엘리먼트의 jQuery 셀렉터
 	display: 1,		// 화면에 보여지는 아이템의 수
-	move: 1,					// 한 번에 슬라이드될(이동할) 아이템의 수
+	move: 1,		// 한 번에 슬라이드될(이동할) 아이템의 수
 	direction: 'horizontal',// 가로슬라이드: horizontal, 세로슬라이드: vertical
 	speed: 400,		// 슬라이딩 속도, 밀리세컨드 단위의 숫자 또는 jQuery.animate()에 사용가능한 'slow', 'fast' 등
 	prevBtn: '.prev',	// 이전 버튼의 jQuery 셀렉터(꼭 버튼 형태일 필요 없음)
