@@ -123,8 +123,6 @@
 			
 		});
 		
-		return this;
-		
 	};
 	
 })(jQuery);
