@@ -1,6 +1,6 @@
 /*
  * 안녕하세요 코드팩토리입니다. http://codefactory.kr, master@codefactory.kr
- * 이 프로그램은 아무런 제약없이 복사/수정/재배포 하셔도 되며 이 주석을 지우셔도 됩니다.
+ * 이 프로그램은 아무런 제약없이 복사/수정/재배포 하셔도 되며 주석을 지우셔도 됩니다.
  * 감사합니다.
  */
 
@@ -26,9 +26,10 @@
 			speed: 400,					// 슬라이딩 속도, 밀리세컨드 단위의 숫자 또는 jQuery.animate()에 사용가능한 'slow', 'fast' 등 문자열
 			prevBtn: '.prev',			// 이전 버튼의 jQuery 셀렉터(꼭 버튼 형태일 필요 없음)
 			nextBtn: '.next',			// 다음 버튼의 jQuery 셀렉터(꼭 버튼 형태일 필요 없음)
-			eventType: 'click'			// slider를 작동시킬 때 필요한 이벤트. 즉, 이전/다음 버튼에 이 이벤트가 발생하면 slider 작동
+			eventType: 'click',			// slider를 작동시킬 때 필요한 이벤트. 즉, 이전/다음 버튼에 이 이벤트가 발생하면 slider 작동
 										// 활용예) 모바일웹 개발할 때 터치(플리킹)으로 slider를 작동시키고 싶으면 이 자리에 click 대신 적절한
 										// 커스텀 이벤트 타입을 등록하고, 터치를 할 때 그 커스텀 이벤트를 prevBtn, nextBtn에 발생시키면 됨
+			callback: null				// 슬라이드 애니메이션이 끝나고 실행될 콜백함수, 인자로 현재 화면에 보이고 있는 아이템들의 DOM객체를 받게 됨
 		};
 		
 		options = $.extend({}, defaults, options);
@@ -108,7 +109,12 @@
 				}
 				
 				obj[marginType] = targetMargin;
-				$container.animate(obj, options.speed);		// 슬라이드 실행
+				
+				// 슬라이드 실행
+				$container.animate(obj, options.speed, options.callback != null ? function() {
+					var list = $container.find(options.item);
+					options.callback(list.slice(Math.abs(targetMargin) / itemSize, Math.abs(targetMargin) / itemSize + options.display));
+				} : null);
 				
 			}
 			

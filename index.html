@@ -8,61 +8,234 @@
 			margin: 0;
 			padding: 0;
 		}
-	
-		#slider {
-			margin: 50px auto;
-			width: 468px;
-			height: 720px;
-		}
 		
-		#slider ul {
+		ul {
 			list-style: none;
 		}
 		
-		#slider li {
-			width: 468px;
-			height: 720px;
+		li {
+			width: 234px;
+			height: 360px;
 			float: left;
 		}
+	
+		#slider1 {
+			width: 234px;
+			height: 360px;
+		}
 		
-		button {
+		#slider2 {
+			width: 468px;
+			height: 360px;
+		}
+		
+		#slider3 {
+			width: 702px;
+			height: 360px;
+		}
+		
+		#slider4 {
+			width: 234px;
+			height: 360px;
+		}
+		
+		#slider5 {
+			width: 234px;
+			height: 720px;
+		}
+		
+		div.example {
+			display: inline-block;
+			margin: 30px 30px 110px 30px;
+			padding: 20px;
+			position: relative;
+			background: #ebebeb;
+			border: 1px solid #ccc;
+			-webkit-box-shadow: #ccc 4px 0 10px,#ccc -4px 0 10px,#aaa 0 22px 20px -8px;
+			box-shadow: #ccc 4px 0 10px,#ccc -4px 0 10px,#aaa 0 22px 20px -8px;
+		}
+		
+		div.example code {
+			display: block;
+			margin-bottom: 20px;
+		}
+		
+		div.example button {
 			position: absolute;
-			top: 400px;
+			bottom: -70px;
 			padding: 10px;
 		}
 		
-		button.prev {
-			left: 50%;
-			margin-left: -300px;
-		}
-		
-		button.next {
-			right: 50%;
-			margin-right: -300px;
+		div.example button.last {
+			left: 90px;
 		}
 	</style>
 </head>
 <body>
 	
-	<div id="slider">
+	<div class="example">
 		
-		<ul class="container">
-			<li class="item"><img src="img/yuri5.jpg"></li>
-			<li class="item"><img src="img/yuri1.jpg"></li>
-			<li class="item"><img src="img/yuri2.jpg"></li>
-			<li class="item"><img src="img/yuri3.jpg"></li>
-			<li class="item"><img src="img/yuri4.jpg"></li>
-		</ul>
+		<h2>1개 보여짐, 1개씩 움직임</h2>
+		
+		<code>
+			$('#slider1').cfSlider();	// display: 1, move: 1, prevBtn: '.prev', nextBtn: '.next' 가 기본값
+		</code>
+		
+		<div id="slider1">
+			<ul class="container">
+				<li class="item"><img src="img/yuri5.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri1.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri2.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri3.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri4.jpg" width="234" height="360"></li>
+			</ul>
+		</div>
+		
+		<button type="button" class="prev">이전</button>
+		<button type="button" class="next last">다음</button>
 		
 	</div>
 	
-	<button type="button" class="prev">이전</button>
-	<button type="button" class="next">다음</button>
+	<div class="example">
+		
+		<h2>2개 보여짐, 1개씩 움직임</h2>
+		
+		<code>
+			$('#slider2').cfSlider({
+				display: 2,
+				prevBtn: '.prev2',
+				nextBtn: '.next2'
+			});
+		</code>
+		
+		<div id="slider2">
+			<ul class="container">
+				<li class="item"><img src="img/yuri5.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri1.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri2.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri3.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri4.jpg" width="234" height="360"></li>
+			</ul>
+		</div>
+		
+		<button type="button" class="prev2">이전</button>
+		<button type="button" class="next2 last">다음</button>
+		
+	</div>
+	
+	<div class="example">
+		
+		<h2>3개 보여짐, 2개씩 움직임</h2>
+		
+		<code>
+			$('#slider3').cfSlider({
+				display: 3,
+				move: 2,
+				prevBtn: '.prev3',
+				nextBtn: '.next3'
+			});
+		</code>
+		
+		<div id="slider3">
+			<ul class="container">
+				<li class="item"><img src="img/yuri5.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri1.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri2.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri3.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri4.jpg" width="234" height="360"></li>
+			</ul>
+		</div>
+		
+		<button type="button" class="prev3">이전</button>
+		<button type="button" class="next3 last">다음</button>
+		
+	</div>
+	
+	<div class="example">
+		
+		<h2>세로로 1개 보여짐, 1개씩 움직임</h2>
+		
+		<code>
+			$('#slider4').cfSlider({
+				direction: 'vertical',
+				prevBtn: '.prev4',
+				nextBtn: '.next4'
+			});
+		</code>
+		
+		<div id="slider4">
+			<ul class="container">
+				<li class="item"><img src="img/yuri5.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri1.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri2.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri3.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri4.jpg" width="234" height="360"></li>
+			</ul>
+		</div>
+		
+		<button type="button" class="prev4">이전</button>
+		<button type="button" class="next4 last">다음</button>
+		
+	</div>
+	
+	<div class="example">
+		
+		<h2>세로로 2개 보여짐, 1개씩 움직임</h2>
+		
+		<code>
+			$('#slider5').cfSlider({
+				direction: 'vertical',
+				display: 2,
+				prevBtn: '.prev5',
+				nextBtn: '.next5'
+			});
+		</code>
+		
+		<div id="slider5">
+			<ul class="container">
+				<li class="item"><img src="img/yuri5.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri1.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri2.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri3.jpg" width="234" height="360"></li>
+				<li class="item"><img src="img/yuri4.jpg" width="234" height="360"></li>
+			</ul>
+		</div>
+		
+		<button type="button" class="prev5">이전</button>
+		<button type="button" class="next5 last">다음</button>
+		
+	</div>
 	
 	<script src="jquery-1.6.4.min.js"></script>
 	<script src="jquery.cfSlider.min.js"></script>
 	<script>
-		$('#slider').cfSlider();
+		$('#slider1').cfSlider();
+		
+		$('#slider2').cfSlider({
+			display: 2,
+			prevBtn: '.prev2',
+			nextBtn: '.next2'
+		});
+		
+		$('#slider3').cfSlider({
+			display: 3,
+			move: 2,
+			prevBtn: '.prev3',
+			nextBtn: '.next3'
+		});
+		
+		$('#slider4').cfSlider({
+			direction: 'vertical',
+			prevBtn: '.prev4',
+			nextBtn: '.next4'
+		});
+		
+		$('#slider5').cfSlider({
+			direction: 'vertical',
+			display: 2,
+			prevBtn: '.prev5',
+			nextBtn: '.next5'
+		});
 	</script>
 </body>
 </html>
