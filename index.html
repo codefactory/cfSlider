@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>cfSlider</title>
+	<link rel="stylesheet" href="http://codefactory.kr/demos/highlighter/dessert.css">
 	<style>
 		div, ul, li {
 			margin: 0;
@@ -11,6 +12,10 @@
 		
 		h4 {
 			margin: 30px;
+		}
+		
+		pre.prettyprint {
+			padding: 20px;
 		}
 		
 		a {
@@ -92,9 +97,10 @@
 		
 		<h2>1개 보여짐, 1개씩 움직임</h2>
 		
-		<code>
-			$('#slider1').cfSlider();	// display: 1, move: 1, prevBtn: '.prev', nextBtn: '.next' 가 기본값
-		</code>
+<pre class="prettyprint">
+$('#slider1').cfSlider();
+
+// display: 1, move: 1, prevBtn: '.prev', nextBtn: '.next' 가 기본값</pre>
 		
 		<div id="slider1">
 			<ul class="container">
@@ -115,13 +121,12 @@
 		
 		<h2>2개 보여짐, 1개씩 움직임</h2>
 		
-		<code>
-			$('#slider2').cfSlider({
-				display: 2,
-				prevBtn: '.prev2',
-				nextBtn: '.next2'
-			});
-		</code>
+<pre class="prettyprint">
+$('#slider2').cfSlider({
+	display: 2,
+	prevBtn: '.prev2',
+	nextBtn: '.next2'
+});</pre>
 		
 		<div id="slider2">
 			<ul class="container">
@@ -142,14 +147,13 @@
 		
 		<h2>3개 보여짐, 2개씩 움직임</h2>
 		
-		<code>
-			$('#slider3').cfSlider({
-				display: 3,
-				move: 2,
-				prevBtn: '.prev3',
-				nextBtn: '.next3'
-			});
-		</code>
+<pre class="prettyprint">
+$('#slider3').cfSlider({
+	display: 3,
+	move: 2,
+	prevBtn: '.prev3',
+	nextBtn: '.next3'
+});</pre>
 		
 		<div id="slider3">
 			<ul class="container">
@@ -170,13 +174,12 @@
 		
 		<h2>세로로 1개 보여짐, 1개씩 움직임</h2>
 		
-		<code>
-			$('#slider4').cfSlider({
-				direction: 'vertical',
-				prevBtn: '.prev4',
-				nextBtn: '.next4'
-			});
-		</code>
+<pre class="prettyprint">
+$('#slider4').cfSlider({
+	direction: 'vertical',
+	prevBtn: '.prev4',
+	nextBtn: '.next4'
+});</pre>
 		
 		<div id="slider4">
 			<ul class="container">
@@ -197,14 +200,13 @@
 		
 		<h2>세로로 2개 보여짐, 1개씩 움직임</h2>
 		
-		<code>
-			$('#slider5').cfSlider({
-				direction: 'vertical',
-				display: 2,
-				prevBtn: '.prev5',
-				nextBtn: '.next5'
-			});
-		</code>
+<pre class="prettyprint">
+$('#slider5').cfSlider({
+	direction: 'vertical',
+	display: 2,
+	prevBtn: '.prev5',
+	nextBtn: '.next5'
+});</pre>
 		
 		<div id="slider5">
 			<ul class="container">
@@ -222,6 +224,7 @@
 	</div>
 	
 	<script src="jquery-1.6.4.min.js"></script>
+	<script src="http://codefactory.kr/demos/highlighter/prettify.js"></script>
 	<script src="jquery.cfSlider.min.js"></script>
 	<script>
 		$('#slider1').cfSlider();
@@ -251,6 +254,8 @@
 			prevBtn: '.prev5',
 			nextBtn: '.next5'
 		});
+		
+		prettyPrint();
 	</script>
 </body>
 </html>
