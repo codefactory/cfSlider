@@ -30,6 +30,9 @@
 										// 활용예) 모바일웹 개발할 때 터치(플리킹)으로 slider를 작동시키고 싶으면 이 자리에 click 대신 적절한
 										// 커스텀 이벤트 타입을 등록하고, 터치를 할 때 그 커스텀 이벤트를 prevBtn, nextBtn에 발생시키면 됨
 			callback: null				// 슬라이드 애니메이션이 끝나고 실행될 콜백함수, 인자로 현재 화면에 보이고 있는 아이템들의 DOM객체를 받게 됨
+			// callback: function(items) {
+				// console.log(items);	// 이런 식으로 사용하시면 됩니다.
+			// }
 		};
 		
 		options = $.extend({}, defaults, options);
