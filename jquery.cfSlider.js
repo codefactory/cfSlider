@@ -41,7 +41,7 @@
 			
 			var slider = $(this),
 				$container = slider.find(options.container),
-				$items = $container.find(options.item),
+				$items = $container.find(options.item).not('.cfslider_clone'),
 				itemLength = $items.length,
 				$afterItems = $items.slice(0, options.display).clone(),		// 아이템들 중에서 앞에서 부터 options.display 만큼 복사
 				$beforeItems = $items.slice(itemLength - options.display, itemLength).clone(),	// 아이템들 중에서 뒤에서 부터 options.display 만큼 복사
@@ -50,9 +50,18 @@
 				$prevBtn = $(options.prevBtn),
 				$nextBtn = $(options.nextBtn);
 				
+			$beforeItems.each(function() {
+				$(this).addClass('cfslider_clone');
+			});
+			
+			$afterItems.each(function() {
+				$(this).addClass('cfslider_clone');
+			});
+				
 			slider.css('overflow', 'hidden');	// 필수 css 속성, css쪽에서 정의안하는 경우를 대비해 설정, 실제 움직이는 $container를 싸고 있는 slider가 overflow:hidden 속성을 가지고 있어야 자신의 크기만큼만 사용자에게 보여줄수 있기 때문
 			
-			$container.prepend($beforeItems).append($afterItems);	// 기존 아이템들의 앞에는 beforeItems를 추가하고 뒤에는 afterItems를 추가함
+			$container.empty();
+			$container.append($beforeItems, $items, $afterItems);	// 기존 아이템들의 앞에는 beforeItems를 추가하고 뒤에는 afterItems를 추가함
 																	// 즉, 원래 아이템 목록이 '1-가','2-나','3-다','4-라','5-마' 이고 move가 3이라면 아래와 같이됨
 																	// ==> '1-다','2-라','3-마','4-가','5-나','6-다','7-라','8-마','9-가','10-나','11-다'
 																	// 좌우 이동을 위해서 원래 html코드에 있던 아이템 목록의 앞뒤에 복사(clone)한 아이템들을 더 붙여 주는 것
