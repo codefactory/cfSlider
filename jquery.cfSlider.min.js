@@ -1,5 +1,5 @@
 /*
- * 안녕하세요 코드팩토리입니다. http://codefactory.kr, master@codefactory.kr 프로그램 개발의뢰를 받고 있습니다.
+ * 안녕하세요 코드팩토리입니다. http://codefactory.kr, [프로그램 개발문의] master@codefactory.kr
  * 이 프로그램은 아무런 제약없이 복사/수정/재배포 하셔도 되며 주석을 지우셔도 됩니다.
  * 감사합니다.
  */
