@@ -82,24 +82,32 @@
 			
 			
 			// 이전 버튼에 이벤트 발생시 실행
-			$prevBtn.bind(options.eventType, function() {
-				go('prev');
-			});
+			$prevBtn
+				.unbind(options.eventType + '.cfSlider')
+				.bind(options.eventType + '.cfSlider', function() {
+					go('prev');
+				});
 		
 			// 다음 버튼에 이벤트 발생시 실행
-			$nextBtn.bind(options.eventType, function() {
-				go('next');
-			});
+			$nextBtn
+				.unbind(options.eventType + '.cfSlider')
+				.bind(options.eventType + '.cfSlider', function() {
+					go('next');
+				});
 			
 			// 커스텀 이벤트 타입이 등록되었을 경우
 			if (options.prevEventType && options.nextEventType) {
-				slider.bind(options.prevEventType, function() {
-					go('prev');
-				});
+				slider
+					.unbind(options.prevEventType + '.cfSlider')
+					.bind(options.prevEventType + '.cfSlider', function() {
+						go('prev');
+					});
 				
-				slider.bind(options.nextEventType, function() {
-					go('next');
-				});
+				slider
+					.unbind(options.nextEventType + '.cfSlider')
+					.bind(options.nextEventType + '.cfSlider', function() {
+						go('next');
+					});
 			}
 			
 			// 슬라이드 함수
