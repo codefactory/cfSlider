@@ -27,8 +27,9 @@
 			prevBtn: '.prev',			// 이전 버튼의 jQuery 셀렉터(꼭 버튼 형태일 필요 없음)
 			nextBtn: '.next',			// 다음 버튼의 jQuery 셀렉터(꼭 버튼 형태일 필요 없음)
 			eventType: 'click',			// slider를 작동시킬 때 필요한 이벤트. 즉, 이전/다음 버튼에 이 이벤트가 발생하면 slider 작동
-										// 활용예) 모바일웹 개발할 때 터치(플리킹)으로 slider를 작동시키고 싶으면 이 자리에 click 대신 적절한
-										// 커스텀 이벤트 타입을 등록하고, 터치를 할 때 그 커스텀 이벤트를 prevBtn, nextBtn에 발생시키면 됨
+			prevEventType: null,		// prev, next로 이동할 때 사용할 특별한 이벤트 타입 등록
+			nextEventType: null,		// 활용예) 모바일웹 개발할 때 터치 swipe(플리킹)으로 slider를 작동시키고 싶으면 이 자리에 적절한
+										// 커스텀 이벤트 타입을 등록하고, 터치를 할 때 그 커스텀 이벤트를 cfSlider를 실행시킬 엘리먼트에서 발생시키면 됨
 			callback: null				// 슬라이드 애니메이션이 끝나고 실행될 콜백함수, 인자로 현재 화면에 보이고 있는 아이템들의 DOM객체를 받게 됨
 			// callback: function(items) {
 				// console.log(items);	// 이런 식으로 사용하시면 됩니다.
@@ -89,6 +90,17 @@
 			$nextBtn.bind(options.eventType, function() {
 				go('next');
 			});
+			
+			// 커스텀 이벤트 타입이 등록되었을 경우
+			if (options.prevEventType && options.nextEventType) {
+				slider.bind(options.prevEventType, function() {
+					go('prev');
+				});
+				
+				slider.bind(options.nextEventType, function() {
+					go('next');
+				});
+			}
 			
 			// 슬라이드 함수
 			function go(direction) {
