@@ -131,14 +131,14 @@
 	
 	
 	// 슬라이드 함수
-	function go(direction, $container, marginType, itemSize, itemLength, options) {
+	function go(direction, $container, marginType, itemSize, itemLength, options, currentMargin) {
 		
 		if ($container.is(':animated')) {		// 애니메이션 진행중일 때 누르면 반응 없도록 처리
 			return;
 		}
 		
 		var obj = {},	// animate에 넘길 parameter를 만들기 위한 임시 객체
-			currentMargin = parseInt($container.css(marginType));	// $container의 현재 margin
+			currentMargin = currentMargin === undefined ? parseInt($container.css(marginType)) : currentMargin;	// $container의 현재 margin
 		
 		if (direction === 'prev') {
 			
