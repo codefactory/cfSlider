@@ -143,30 +143,42 @@
 		if (direction === 'prev') {
 			
 			var targetMargin = currentMargin + itemSize * options.move;		// 이동할 margin
+			
+			obj[marginType] = targetMargin;
+			
+			// 슬라이드 실행
+			$container.animate(obj, options.speed, function() {
+				if ((Math.abs(currentMargin) / itemSize) <= (options.move > options.display ? options.move : options.display)) {	// 다음 위치에 아이템이 move할 아이템보다 적게 남아있을 경우
+					targetMargin = targetMargin - (itemSize * itemLength);	// 이동할 margin 재설정
+					$container.css(marginType, targetMargin);	// itemSize * itemLength 만큼 margin을 조정 -> 이렇게 하기 위해 아이템들을 clone()해서 원본의 앞뒤에 붙여놨던 것 -> 순간적으로 margin이 조정되고 보이는 아이템 항목은 같기 때문에 사용자는 인지하지 못함
+				}
 				
-			if ((Math.abs(currentMargin) / itemSize) < options.move) {	// 이전 위치에 아이템이 move할 아이템보다 적게 남아있을 경우
-				$container.css(marginType, currentMargin - (itemSize * itemLength));	// itemSize * itemLength 만큼 margin을 조정 -> 이렇게 하기 위해 아이템들을 clone()해서 원본의 앞뒤에 붙여놨던 것 -> 순간적으로 margin이 조정되고 보이는 아이템 항목은 같기 때문에 사용자는 인지하지 못함
-				targetMargin = targetMargin - (itemSize * itemLength);	// 이동할 margin 재설정
-			}
+				if (options.callback != null) {
+					var list = $container.find(options.item);
+					options.callback(list.slice(Math.abs(targetMargin) / itemSize, Math.abs(targetMargin) / itemSize + options.display));
+				}
+			});
 			
 		} else if (direction === 'next') {
 			
 			var targetMargin = currentMargin - itemSize * options.move;		// 이동할 margin
+			
+			obj[marginType] = targetMargin;
+			
+			// 슬라이드 실행
+			$container.animate(obj, options.speed, function() {
+				if (itemLength + options.display * 2 - (Math.abs(currentMargin) / itemSize + options.display) <= (options.move > options.display ? options.move : options.display)) {	// 다음 위치에 아이템이 move할 아이템보다 적게 남아있을 경우
+					targetMargin = targetMargin + (itemSize * itemLength);	// 이동할 margin 재설정
+					$container.css(marginType, targetMargin);	// itemSize * itemLength 만큼 margin을 조정 -> 이렇게 하기 위해 아이템들을 clone()해서 원본의 앞뒤에 붙여놨던 것 -> 순간적으로 margin이 조정되고 보이는 아이템 항목은 같기 때문에 사용자는 인지하지 못함
+				}
 				
-			if (itemLength + options.display * 2 - (Math.abs(currentMargin) / itemSize + options.display) < options.move) {	// 다음 위치에 아이템이 move할 아이템보다 적게 남아있을 경우
-				$container.css(marginType, currentMargin + (itemSize * itemLength));	// itemSize * itemLength 만큼 margin을 조정 -> 이렇게 하기 위해 아이템들을 clone()해서 원본의 앞뒤에 붙여놨던 것 -> 순간적으로 margin이 조정되고 보이는 아이템 항목은 같기 때문에 사용자는 인지하지 못함
-				targetMargin = targetMargin + (itemSize * itemLength);	// 이동할 margin 재설정
-			}
+				if (options.callback != null) {
+					var list = $container.find(options.item);
+					options.callback(list.slice(Math.abs(targetMargin) / itemSize, Math.abs(targetMargin) / itemSize + options.display));
+				}
+			});
 			
 		}
-		
-		obj[marginType] = targetMargin;
-		
-		// 슬라이드 실행
-		$container.animate(obj, options.speed, options.callback != null ? function() {
-			var list = $container.find(options.item);
-			options.callback(list.slice(Math.abs(targetMargin) / itemSize, Math.abs(targetMargin) / itemSize + options.display));
-		} : null);
 		
 	}
 	
