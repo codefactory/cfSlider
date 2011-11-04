@@ -13,11 +13,11 @@
 // 원본 아이템 목록의 앞과 뒤에 붙여넣어서 새로운 아이템 목록을 만드는 방법을 사용합니다. 이때 앞뒤에 복사해서 붙여넣는 아이템의 각 개수는
 // 화면에 보여질 아이템의 수와 같게 해줍니다.(options에서 display 항목입니다.)
 
-;(function($) {
+;(function($, window, document, undefined) {
 	
-	$.fn.cfSlider = function(options) {
-		
-		var defaults = {
+	// plugin 이름, default option 설정
+	var pluginName = 'cfSlider',
+		defaults = {
 			container: '.container',	// 아이템들을 가지고 있는 엘리먼트의 jQuery 셀렉터
 			item: '.item',				// 아이템 엘리먼트의 jQuery 셀렉터
 			display: 1,					// 화면에 보여지는 아이템의 수
@@ -35,123 +35,155 @@
 				// console.log(items);	// 이런 식으로 사용하시면 됩니다.
 			// }
 		};
+	
+	
+	// plugin constructor
+	function Plugin(element, options) {
+		this.element = element;
+		this.options = $.extend({}, defaults, options);
 		
-		options = $.extend({}, defaults, options);
+		this._defaults = defaults;
+		this._name = pluginName;
+		
+		this.init();
+	}
+	
+	
+	// initialization logic
+	Plugin.prototype.init = function() {
+		
+		var slider = $(this.element),
+			options = this.options,
+			$container = slider.find(options.container),
+			$items = $container.find(options.item).not('.cfslider_clone'),
+			itemLength = $items.length,
+			$afterItems = $items.slice(0, options.display).clone(),		// 아이템들 중에서 앞에서 부터 options.display 만큼 복사
+			$beforeItems = $items.slice(itemLength - options.display, itemLength).clone(),	// 아이템들 중에서 뒤에서 부터 options.display 만큼 복사
+			itemSize = options.direction === 'horizontal' ? $items.first().width() : $items.first().height(),		// 아이템 하나의 너비 또는 높이를 구함
+			marginType = options.direction === 'horizontal' ? 'marginLeft' : 'marginTop',	// 슬라이딩 효과에 사용할 margin의 종류
+			$prevBtn = $(options.prevBtn),
+			$nextBtn = $(options.nextBtn);
+			
+		this.container = $container;
+		this.marginType = marginType;
+		this.itemSize = itemSize;
+		this.itemLength = itemLength;
+		
+		$beforeItems.each(function() {
+			$(this).addClass('cfslider_clone');
+		});
+		
+		$afterItems.each(function() {
+			$(this).addClass('cfslider_clone');
+		});
+			
+		slider.css('overflow', 'hidden');	// 필수 css 속성, css쪽에서 정의안하는 경우를 대비해 설정, 실제 움직이는 $container를 싸고 있는 slider가 overflow:hidden 속성을 가지고 있어야 자신의 크기만큼만 사용자에게 보여줄수 있기 때문
+		
+		$container.empty();
+		$container.append($beforeItems, $items, $afterItems);	// 기존 아이템들의 앞에는 beforeItems를 추가하고 뒤에는 afterItems를 추가함
+																// 즉, 원래 아이템 목록이 '1-가','2-나','3-다','4-라','5-마' 이고 move가 3이라면 아래와 같이됨
+																// ==> '1-다','2-라','3-마','4-가','5-나','6-다','7-라','8-마','9-가','10-나','11-다'
+																// 좌우 이동을 위해서 원래 html코드에 있던 아이템 목록의 앞뒤에 복사(clone)한 아이템들을 더 붙여 주는 것
+		
+		
+		// 그리고 나서 $container의 width를 새로 복사해넣은 아이템들까지 포함한 width로 만들어주고
+		// 원래 html코드에 있던 첫 번째 아이템이 보이게 하기위해 $container의 marginLeft 값을 조정함
+		// 예) itemLength = 5, itemSize = 100, move = 3 인 상황이었다면
+		// 		$container의 width는 앞에 3개, 원래 5개, 뒤에 3개 이렇게 11개의 아이템이라 1100이 되고
+		//		원래 5개 중 첫 번째가 제일 처음에 보이게 하기위해 앞에 3개 width 만큼을 -marginLeft 처리함
+		// * 위 설명은 direction이 horizontal일 경우에 해당합니다. vertical일 경우에는 $container의 width는 itemSize이고 marginLeft대신 marginTop을 사용합니다.
+		var containerCss = {};
+		containerCss['width'] = options.direction === 'horizontal' ? itemSize * (itemLength + options.display * 2) : itemSize;
+		containerCss[marginType] = -(itemSize * options.display);
+		
+		$container.css(containerCss);
+		
+		// 이전 버튼에 이벤트 발생시 실행
+		$prevBtn
+			.unbind(options.eventType + '.cfSlider')
+			.bind(options.eventType + '.cfSlider', function() {
+				go('prev', $container, marginType, itemSize, itemLength, options);
+			});
+	
+		// 다음 버튼에 이벤트 발생시 실행
+		$nextBtn
+			.unbind(options.eventType + '.cfSlider')
+			.bind(options.eventType + '.cfSlider', function() {
+				go('next', $container, marginType, itemSize, itemLength, options);
+			});
+		
+		// 커스텀 이벤트 타입이 등록되었을 경우
+		if (options.prevEventType && options.nextEventType) {
+			slider
+				.unbind(options.prevEventType + '.cfSlider')
+				.bind(options.prevEventType + '.cfSlider', function() {
+					go('prev', $container, marginType, itemSize, itemLength, options);
+				});
+			
+			slider
+				.unbind(options.nextEventType + '.cfSlider')
+				.bind(options.nextEventType + '.cfSlider', function() {
+					go('next', $container, marginType, itemSize, itemLength, options);
+				});
+		}
+		
+	};
+	
+	
+	// 슬라이드 함수
+	function go(direction, $container, marginType, itemSize, itemLength, options) {
+		
+		if ($container.is(':animated')) {		// 애니메이션 진행중일 때 누르면 반응 없도록 처리
+			return;
+		}
+		
+		var obj = {},	// animate에 넘길 parameter를 만들기 위한 임시 객체
+			currentMargin = parseInt($container.css(marginType));	// $container의 현재 margin
+		
+		if (direction === 'prev') {
+			
+			var targetMargin = currentMargin + itemSize * options.move;		// 이동할 margin
+				
+			if ((Math.abs(currentMargin) / itemSize) < options.move) {	// 이전 위치에 아이템이 move할 아이템보다 적게 남아있을 경우
+				$container.css(marginType, currentMargin - (itemSize * itemLength));	// itemSize * itemLength 만큼 margin을 조정 -> 이렇게 하기 위해 아이템들을 clone()해서 원본의 앞뒤에 붙여놨던 것 -> 순간적으로 margin이 조정되고 보이는 아이템 항목은 같기 때문에 사용자는 인지하지 못함
+				targetMargin = targetMargin - (itemSize * itemLength);	// 이동할 margin 재설정
+			}
+			
+		} else if (direction === 'next') {
+			
+			var targetMargin = currentMargin - itemSize * options.move;		// 이동할 margin
+				
+			if (itemLength + options.display * 2 - (Math.abs(currentMargin) / itemSize + options.display) < options.move) {	// 다음 위치에 아이템이 move할 아이템보다 적게 남아있을 경우
+				$container.css(marginType, currentMargin + (itemSize * itemLength));	// itemSize * itemLength 만큼 margin을 조정 -> 이렇게 하기 위해 아이템들을 clone()해서 원본의 앞뒤에 붙여놨던 것 -> 순간적으로 margin이 조정되고 보이는 아이템 항목은 같기 때문에 사용자는 인지하지 못함
+				targetMargin = targetMargin + (itemSize * itemLength);	// 이동할 margin 재설정
+			}
+			
+		}
+		
+		obj[marginType] = targetMargin;
+		
+		// 슬라이드 실행
+		$container.animate(obj, options.speed, options.callback != null ? function() {
+			var list = $container.find(options.item);
+			options.callback(list.slice(Math.abs(targetMargin) / itemSize, Math.abs(targetMargin) / itemSize + options.display));
+		} : null);
+		
+	}
+	
+	// go 함수를 cfSlider 인스턴스의 메서드로 만듬
+	Plugin.prototype.go = go;
+	
+	// jQuery 객체와 element의 data에 plugin을 넣음
+	$.fn[pluginName] = function(options) {
 		
 		return this.each(function() {
 			
-			var slider = $(this),
-				$container = slider.find(options.container),
-				$items = $container.find(options.item).not('.cfslider_clone'),
-				itemLength = $items.length,
-				$afterItems = $items.slice(0, options.display).clone(),		// 아이템들 중에서 앞에서 부터 options.display 만큼 복사
-				$beforeItems = $items.slice(itemLength - options.display, itemLength).clone(),	// 아이템들 중에서 뒤에서 부터 options.display 만큼 복사
-				itemSize = options.direction === 'horizontal' ? $items.first().width() : $items.first().height(),		// 아이템 하나의 너비 또는 높이를 구함
-				marginType = options.direction === 'horizontal' ? 'marginLeft' : 'marginTop',	// 슬라이딩 효과에 사용할 margin의 종류
-				$prevBtn = $(options.prevBtn),
-				$nextBtn = $(options.nextBtn);
-				
-			$beforeItems.each(function() {
-				$(this).addClass('cfslider_clone');
-			});
-			
-			$afterItems.each(function() {
-				$(this).addClass('cfslider_clone');
-			});
-				
-			slider.css('overflow', 'hidden');	// 필수 css 속성, css쪽에서 정의안하는 경우를 대비해 설정, 실제 움직이는 $container를 싸고 있는 slider가 overflow:hidden 속성을 가지고 있어야 자신의 크기만큼만 사용자에게 보여줄수 있기 때문
-			
-			$container.empty();
-			$container.append($beforeItems, $items, $afterItems);	// 기존 아이템들의 앞에는 beforeItems를 추가하고 뒤에는 afterItems를 추가함
-																	// 즉, 원래 아이템 목록이 '1-가','2-나','3-다','4-라','5-마' 이고 move가 3이라면 아래와 같이됨
-																	// ==> '1-다','2-라','3-마','4-가','5-나','6-다','7-라','8-마','9-가','10-나','11-다'
-																	// 좌우 이동을 위해서 원래 html코드에 있던 아이템 목록의 앞뒤에 복사(clone)한 아이템들을 더 붙여 주는 것
-			
-			
-			// 그리고 나서 $container의 width를 새로 복사해넣은 아이템들까지 포함한 width로 만들어주고
-			// 원래 html코드에 있던 첫 번째 아이템이 보이게 하기위해 $container의 marginLeft 값을 조정함
-			// 예) itemLength = 5, itemSize = 100, move = 3 인 상황이었다면
-			// 		$container의 width는 앞에 3개, 원래 5개, 뒤에 3개 이렇게 11개의 아이템이라 1100이 되고
-			//		원래 5개 중 첫 번째가 제일 처음에 보이게 하기위해 앞에 3개 width 만큼을 -marginLeft 처리함
-			// * 위 설명은 direction이 horizontal일 경우에 해당합니다. vertical일 경우에는 $container의 width는 itemSize이고 marginLeft대신 marginTop을 사용합니다.
-			var containerCss = {};
-			containerCss['width'] = options.direction === 'horizontal' ? itemSize * (itemLength + options.display * 2) : itemSize;
-			containerCss[marginType] = -(itemSize * options.display);
-			
-			$container.css(containerCss);
-			
-			
-			// 이전 버튼에 이벤트 발생시 실행
-			$prevBtn
-				.unbind(options.eventType + '.cfSlider')
-				.bind(options.eventType + '.cfSlider', function() {
-					go('prev');
-				});
-		
-			// 다음 버튼에 이벤트 발생시 실행
-			$nextBtn
-				.unbind(options.eventType + '.cfSlider')
-				.bind(options.eventType + '.cfSlider', function() {
-					go('next');
-				});
-			
-			// 커스텀 이벤트 타입이 등록되었을 경우
-			if (options.prevEventType && options.nextEventType) {
-				slider
-					.unbind(options.prevEventType + '.cfSlider')
-					.bind(options.prevEventType + '.cfSlider', function() {
-						go('prev');
-					});
-				
-				slider
-					.unbind(options.nextEventType + '.cfSlider')
-					.bind(options.nextEventType + '.cfSlider', function() {
-						go('next');
-					});
-			}
-			
-			// 슬라이드 함수
-			function go(direction) {
-				
-				if ($container.is(':animated')) {		// 애니메이션 진행중일 때 누르면 반응 없도록 처리
-					return;
-				}
-				
-				var obj = {},	// animate에 넘길 parameter를 만들기 위한 임시 객체
-					currentMargin = parseInt($container.css(marginType));	// $container의 현재 margin
-				
-				if (direction === 'prev') {
-					
-					var targetMargin = currentMargin + itemSize * options.move;		// 이동할 margin
-						
-					if ((Math.abs(currentMargin) / itemSize) < options.move) {	// 이전 위치에 아이템이 move할 아이템보다 적게 남아있을 경우
-						$container.css(marginType, currentMargin - (itemSize * itemLength));	// itemSize * itemLength 만큼 margin을 조정 -> 이렇게 하기 위해 아이템들을 clone()해서 원본의 앞뒤에 붙여놨던 것 -> 순간적으로 margin이 조정되고 보이는 아이템 항목은 같기 때문에 사용자는 인지하지 못함
-						targetMargin = targetMargin - (itemSize * itemLength);	// 이동할 margin 재설정
-					}
-					
-				} else if (direction === 'next') {
-					
-					var targetMargin = currentMargin - itemSize * options.move;		// 이동할 margin
-						
-					if (itemLength + options.display * 2 - (Math.abs(currentMargin) / itemSize + options.display) < options.move) {	// 다음 위치에 아이템이 move할 아이템보다 적게 남아있을 경우
-						$container.css(marginType, currentMargin + (itemSize * itemLength));	// itemSize * itemLength 만큼 margin을 조정 -> 이렇게 하기 위해 아이템들을 clone()해서 원본의 앞뒤에 붙여놨던 것 -> 순간적으로 margin이 조정되고 보이는 아이템 항목은 같기 때문에 사용자는 인지하지 못함
-						targetMargin = targetMargin + (itemSize * itemLength);	// 이동할 margin 재설정
-					}
-					
-				}
-				
-				obj[marginType] = targetMargin;
-				
-				// 슬라이드 실행
-				$container.animate(obj, options.speed, options.callback != null ? function() {
-					var list = $container.find(options.item);
-					options.callback(list.slice(Math.abs(targetMargin) / itemSize, Math.abs(targetMargin) / itemSize + options.display));
-				} : null);
-				
+			if ( ! $.data(this, 'plugin_' + pluginName)) {
+				$.data(this, 'plugin_' + pluginName, new Plugin(this, options));
 			}
 			
 		});
 		
 	};
 	
-})(jQuery);
+})(jQuery, window, document);
