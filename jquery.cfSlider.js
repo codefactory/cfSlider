@@ -113,13 +113,15 @@
 			});
 		
 		// 커스텀 이벤트 타입이 등록되었을 경우
-		if (options.prevEventType && options.nextEventType) {
+		if (options.prevEventType) {
 			slider
 				.unbind(options.prevEventType + '.cfSlider')
 				.bind(options.prevEventType + '.cfSlider', function() {
 					go('prev', $container, marginType, itemSize, itemLength, options);
 				});
-			
+		}
+		
+		if (options.nextEventType) {
 			slider
 				.unbind(options.nextEventType + '.cfSlider')
 				.bind(options.nextEventType + '.cfSlider', function() {
