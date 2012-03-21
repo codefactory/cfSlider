@@ -1,18 +1,20 @@
 안녕하세요 코드팩토리입니다. http://codefactory.kr, [프로그램 개발문의] master@codefactory.kr
+
 이 프로그램은 아무런 제약없이 복사/수정/재배포 하셔도 되며 주석을 지우셔도 됩니다.
 감사합니다.
 
+## 소개
 jQuery를 사용한 슬라이더 만들기 plugin 입니다.
+
 [데모보기] http://codefactory.kr/demos/cfslider
 [데모보기2] http://codefactory.kr/demos/cfslider/auto_slide.html - 3초에 한번씩 auto slide
 
 
----------------------------------------
- * 사용방법
----------------------------------------
+## 사용방법
 다음과 같은 형태의 HTML 마크업이 필요합니다. 꼭, ul,li가 사용될 필요는 없으며
 slider > container > item 형태의 중첩구조이면 됩니다.
 
+```html
 <div id="slider">
 	<ul class="container">
 		<li class="item"></li>
@@ -22,6 +24,7 @@ slider > container > item 형태의 중첩구조이면 됩니다.
 		<li class="item"></li>
 	</ul>
 </div>
+```
 
 
 CSS 스타일은 아래와 같이 합니다. 아래 예시의 경우는 화면에 하나의 item만 보여줄 경우이며
@@ -29,6 +32,7 @@ CSS 스타일은 아래와 같이 합니다. 아래 예시의 경우는 화면�
 설정하고 #slider의 width를 400px로 하면 됩니다.
 .item의 width와 height는 슬라이드할 item 하나의 width와 height로 설정합니다.
 
+``` html
 <style>
 	#slider {
 		width: 200px;
@@ -46,22 +50,23 @@ CSS 스타일은 아래와 같이 합니다. 아래 예시의 경우는 화면�
 		float: left;
 	}
 </style>
+```
 
 
 cfSlder의 사용은 아래와 같이 합니다. 옵션으로 화면에 보여질 item의 수(display, 기본값 1),
 한 번에 슬라이드될 아이템의 수(move, 기본값 1), 속도(speed, 기본값 400) 등을 설정할 수 있습니다.
 
+```html
 <script>
 	$('#slider').cfSlider();
 </script>
+```
 
 
----------------------------------------
- * 옵션들
----------------------------------------
+## 옵션들
 cfSlider의 적용가능 옵션은 아래와 같습니다.
 
-
+```js
 $('#slider').cfSlider({
 	container: '.container',// 아이템들을 가지고 있는 엘리먼트의 jQuery 셀렉터
 	item: '.item',		// 아이템 엘리먼트의 jQuery 셀렉터
@@ -80,3 +85,4 @@ $('#slider').cfSlider({
 		// console.log(items);	// 이런 식으로 사용하시면 됩니다.
 	// }
 });
+```
